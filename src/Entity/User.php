@@ -7,15 +7,19 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'custom')]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private ?Uuid $id = null;
 
@@ -34,17 +38,20 @@ class User
     private array $roles = [];
 
     #[ORM\Column(type: types::BOOLEAN)]
-    private ?bool $isDeleted = null;
+    private ?bool $isDeleted = False;
 
     #[ORM\Column(type: types::BOOLEAN)]
-    private ?bool $isEnabled = null;
+    private ?bool $isEnabled = False;
 
-    #[ORM\Column(type: types::DATETIME_IMMUTABLE)]
-    private ?\DateTimeImmutable $createdAt = null;
 
     public function getId(): ?Uuid
     {
         return $this->id;
+    }
+
+    public function getUserIdentifier(): string
+    {
+       return $this->email;
     }
 
     public function getEmail(): ?string
@@ -52,7 +59,7 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -64,11 +71,15 @@ class User
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
         return $this;
+    }
+    public function eraseCredentials(): void
+    {
+        $this->plainPassword = null;
     }
 
     public function getPlainPassword(): ?string
@@ -76,7 +87,7 @@ class User
         return $this->plainPassword;
     }
 
-    public function setPlainPassword(string $password): self
+    public function setPlainPassword(?string $password): self
     {
         $this->plainPassword = $password;
 
@@ -88,7 +99,7 @@ class User
         return $this->pseudo;
     }
 
-    public function setPseudo(string $pseudo): self
+    public function setPseudo(?string $pseudo): self
     {
         $this->pseudo = $pseudo;
 
@@ -100,7 +111,7 @@ class User
         return $this->roles;
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles(?array $roles): self
     {
         $this->roles = $roles;
         return $this;
@@ -111,7 +122,7 @@ class User
         return $this->isDeleted;
     }
 
-    public function setIsDeleted(bool $isDeleted): self
+    public function setIsDeleted(?bool $isDeleted): self
     {
         $this->isDeleted = $isDeleted;
 
@@ -123,21 +134,9 @@ class User
         return $this->isEnabled;
     }
 
-    public function setIsEnabled(bool $isEnabled): self
+    public function setIsEnabled(?bool $isEnabled): self
     {
         $this->isEnabled = $isEnabled;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }
