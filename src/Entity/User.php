@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
@@ -43,6 +45,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: types::BOOLEAN)]
     private ?bool $isEnabled = False;
 
+    #[ORM\OneToMany(targetEntity: Token::class, mappedBy: 'user', cascade: ['persist'])]
+    private ?Collection $tokens;
+
+    public function __construct()
+    {
+        $this->tokens = new ArrayCollection();
+    }
 
     public function getId(): ?Uuid
     {
@@ -77,6 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
     public function eraseCredentials(): void
     {
         $this->plainPassword = null;
@@ -117,7 +127,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isDeleted(): ?bool
+    public function GetIsDeleted(): ?bool
     {
         return $this->isDeleted;
     }
@@ -129,7 +139,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isEnabled(): ?bool
+    public function GetIsEnabled(): ?bool
     {
         return $this->isEnabled;
     }
@@ -138,6 +148,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->isEnabled = $isEnabled;
 
+        return $this;
+    }
+
+    public function getTokens(): Collection
+    {
+        return $this->tokens;
+    }
+
+    public function setToken(Collection $tokens): self
+    {
+        $this->tokens = $tokens;
+        return $this;
+    }
+
+    public function addToken(Token $token): self
+    {
+        $token->setUser($this);
+        $this->tokens->add($token);
         return $this;
     }
 }

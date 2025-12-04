@@ -24,8 +24,8 @@ security:
                 check_path: app_login
                 remember_me: true
             logout:
-                path: /logout
-
+                path: app_logout
+            user_checker: App\Security\ConfirmEmailUserChecker
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
 
