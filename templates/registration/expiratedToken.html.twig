@@ -1,0 +1,3 @@
+{% block body %}
+    Votre token a expiré, renvoyer un mail <a href="{{ absolute_url(path('app_register_validate_resend_email',{'value':token.value})) }}">ici</a>
+{% endblock body %}

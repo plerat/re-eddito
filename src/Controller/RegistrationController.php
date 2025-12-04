@@ -34,9 +34,9 @@ final class RegistrationController extends AbstractController
             $user->addToken($token);
             $entityManager->persist($user);
             $entityManager->flush();
-            $mailerService->sendRegistrationEmail($user->getEmail(),$token);
+            $mailerService->sendRegistrationEmail($user->getEmail(), $token);
 
-            return $this->redirectToRoute('app_register'); #TODO: ajouter la validation du mail ici
+            return $this->redirectToRoute('app_register');
         }
 
         return $this->render('registration/register.html.twig',[
@@ -49,7 +49,9 @@ final class RegistrationController extends AbstractController
     {
         if($token->getExpiredAt() < new \DateTime())
         {
-            $this->render('registration/expiratedToken.html.twig',[]);
+            return $this->render('registration/expiratedToken.html.twig',[
+                'token' => $token,
+            ]);
         }
         $user = $token->getUser();
         $user->setIsEnabled(true);
@@ -60,6 +62,23 @@ final class RegistrationController extends AbstractController
         #TODO: changer la route pour app_home, et login automatiquement le user
         return $this->redirectToRoute('app_login');
 
+    }
+
+    #[Route('/register/reset/{value}', name: 'app_register_validate_resend_email')]
+    public function registerValidateValidate(
+        EntityManagerInterface $entityManager,
+        MailerService $mailerService,
+        Token $token
+    ):Response
+    {
+        $token->setExpiredAt((new \DateTimeImmutable())->add(new \DateInterval('PT15M')));
+        $entityManager->persist($token);
+        $entityManager->flush();
+
+        $user=$token->getUser();
+        $mailerService->sendRegistrationEmail($user->getEmail(), $token);
+        #TODO: changer la route pour app_home, et login automatiquement le user
+        return $this->redirectToRoute('app_login');
     }
 }
 
