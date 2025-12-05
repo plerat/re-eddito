@@ -14,7 +14,7 @@ class MailerService
     {
         $this->mailer = $mailer;
     }
-    public function sendRegistrationEmail(string $to, Token $token)
+    public function sendRegistrationEmail(string $to, Token $token): void
     {
         $email= (new TemplatedEmail())
             ->from('noreply@re-eddito.xyz')
@@ -27,4 +27,18 @@ class MailerService
             ]);
         $this->mailer->send($email);
     }
+
+    public function sendResetPasswordEmail(string $to, Token $token): void {
+        $email= (new TemplatedEmail())
+            ->from('noreply@re-eddito.xyz')
+            ->to($to)
+            ->subject('Request to reset your password')
+            ->htmlTemplate('email/request_reset_password.html.twig')
+            ->locale('fr')
+            ->context([
+                'token' => $token
+            ]);
+        $this->mailer->send($email);
+    }
+
 }

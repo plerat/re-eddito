@@ -4,7 +4,18 @@
 
 {% block body %}
 
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     <h1>Login</h1>
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
 
     {{ form_start(form,{'attr':{'id':'form-login'}}) }}
     {{ form_errors(form) }}
@@ -15,9 +26,12 @@
 
     <button type="submit" class="btn">Login</button>
     {{ form_end(form) }}
-    {% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+
+    <p>
+        <a href="{{ absolute_url(path('app_request-forgot-password')) }}">Mot de passe oublié ?</a>
+    </p>
+
+
 
 
 {#<script>#}
