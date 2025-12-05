@@ -21,8 +21,6 @@ final class RegistrationController extends AbstractController
         EntityManagerInterface $entityManager,
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
-        MailerService $mailerService,
-        TokenService $tokenService
     ): Response
     {
         $user = new User();
@@ -30,17 +28,32 @@ final class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid())
         {
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPlainPassword()));
-            $token = $tokenService->generateToken($user);
-            $user->addToken($token);
             $entityManager->persist($user);
             $entityManager->flush();
-            $mailerService->sendRegistrationEmail($user->getEmail(), $token);
-
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('app_send_verification_email', [
+                'id' => $user->getId()
+            ]);
         }
 
         return $this->render('registration/register.html.twig',[
             'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/register/send-verification-email/{id}', name: 'app_send_verification_email')]
+    public function sendVerificationEmail(
+        User $user,
+        MailerService $mailerService,
+        TokenService $tokenService,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $token = $tokenService->generateToken($user);
+        $token->setUser($user);
+        $entityManager->persist($token);
+        $entityManager->flush();
+        $mailerService->sendRegistrationEmail($user->getEmail(), $token);
+        return $this->render('registration/send_verification_email.html.twig',[
+            'user' => $user,
         ]);
     }
 
@@ -61,26 +74,25 @@ final class RegistrationController extends AbstractController
 
         #TODO: changer la route pour app_home, et login automatiquement le user
         return $this->redirectToRoute('app_login');
-
     }
-
-    #[Route('/register/reset/{value}', name: 'app_register_validate_resend_email')]
-    public function registerValidateValidate(
-        EntityManagerInterface $entityManager,
-        MailerService $mailerService,
-        Token $token,
-        TokenService  $tokenService
-    ):Response
-    {
-        $user=$token->getUser();
-
-        $newToken = $tokenService->generateToken($user);
-        $entityManager->persist($newToken);
-        $entityManager->flush();
-
-        $mailerService->sendRegistrationEmail($user->getEmail(), $newToken);
-        #TODO: changer la route pour app_home, et login automatiquement le user
-        return $this->redirectToRoute('app_login');
-    }
+//
+//    #[Route('/register/reset/{value}', name: 'app_register_validate_resend_email')]
+//    public function registerValidateValidate(
+//        EntityManagerInterface $entityManager,
+//        MailerService $mailerService,
+//        Token $token,
+//        TokenService  $tokenService
+//    ):Response
+//    {
+//        $user=$token->getUser();
+//
+//        $newToken = $tokenService->generateToken($user);
+//        $entityManager->persist($newToken);
+//        $entityManager->flush();
+//
+//        $mailerService->sendRegistrationEmail($user->getEmail(), $newToken);
+//        #TODO: changer la route pour app_home, et login automatiquement le user
+//        return $this->redirectToRoute('app_login');
+//    }
 }
 

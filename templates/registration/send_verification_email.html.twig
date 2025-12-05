@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+    <p>Un email de confirmation a été envoyé à l'adresse suivante {{ user.email }}</p>
+    <p>Si vous n'avez rien reçu, veuillez cliquer <a href="{{ path('app_send_verification_email', {id: user.id }) }}">ici</a></p>
+{% endblock %}
+
+

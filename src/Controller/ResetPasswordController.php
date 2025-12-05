@@ -76,6 +76,7 @@ class ResetPasswordController extends AbstractController
             }
             if ($form->isValid()) {
                 $user->setPassword($passwordHasher->hashPassword($user, $form->getData()['plainPassword']));
+                $user->setIsEnabled(true);
                 $entityManager->persist($user);
                 $entityManager->flush();
                 $this->addFlash('Success', 'Password reset');
