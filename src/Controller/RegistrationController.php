@@ -68,15 +68,17 @@ final class RegistrationController extends AbstractController
     public function registerValidateValidate(
         EntityManagerInterface $entityManager,
         MailerService $mailerService,
-        Token $token
+        Token $token,
+        TokenService  $tokenService
     ):Response
     {
-        $token->setExpiredAt((new \DateTimeImmutable())->add(new \DateInterval('PT15M')));
-        $entityManager->persist($token);
+        $user=$token->getUser();
+
+        $newToken = $tokenService->generateToken($user);
+        $entityManager->persist($newToken);
         $entityManager->flush();
 
-        $user=$token->getUser();
-        $mailerService->sendRegistrationEmail($user->getEmail(), $token);
+        $mailerService->sendRegistrationEmail($user->getEmail(), $newToken);
         #TODO: changer la route pour app_home, et login automatiquement le user
         return $this->redirectToRoute('app_login');
     }
