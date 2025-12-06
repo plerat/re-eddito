@@ -60,13 +60,13 @@ final class RegistrationController extends AbstractController
     #[Route('/register/validate/{value}', name: 'app_register_validate')]
     public function registerValidate(EntityManagerInterface $entityManager, Token $token): Response
     {
+        $user = $token->getUser();
         if($token->getExpiredAt() < new \DateTime())
         {
             return $this->render('registration/expiratedToken.html.twig',[
-                'token' => $token,
+                'user' => $user,
             ]);
         }
-        $user = $token->getUser();
         $user->setIsEnabled(true);
         $entityManager->persist($user);
         $entityManager->remove($token);
@@ -75,24 +75,5 @@ final class RegistrationController extends AbstractController
         #TODO: changer la route pour app_home, et login automatiquement le user
         return $this->redirectToRoute('app_login');
     }
-//
-//    #[Route('/register/reset/{value}', name: 'app_register_validate_resend_email')]
-//    public function registerValidateValidate(
-//        EntityManagerInterface $entityManager,
-//        MailerService $mailerService,
-//        Token $token,
-//        TokenService  $tokenService
-//    ):Response
-//    {
-//        $user=$token->getUser();
-//
-//        $newToken = $tokenService->generateToken($user);
-//        $entityManager->persist($newToken);
-//        $entityManager->flush();
-//
-//        $mailerService->sendRegistrationEmail($user->getEmail(), $newToken);
-//        #TODO: changer la route pour app_home, et login automatiquement le user
-//        return $this->redirectToRoute('app_login');
-//    }
 }
 

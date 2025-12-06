@@ -18,7 +18,6 @@ final class LoginController extends AbstractController
         Request $request,
         AuthenticationUtils $authenticationUtils,
         UserRepository $userRepository
-
     ):Response
     {
         $error = $authenticationUtils->getLastAuthenticationError();
