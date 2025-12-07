@@ -48,9 +48,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Token::class, mappedBy: 'user', cascade: ['persist'])]
     private ?Collection $tokens;
 
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'user', cascade: ['persist'])]
+    private ?Collection $posts;
+
+
     public function __construct()
     {
         $this->tokens = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -166,6 +171,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $token->setUser($this);
         $this->tokens->add($token);
+        return $this;
+    }
+
+    public function getPost(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function setPost(Collection $posts): self
+    {
+        $this->posts = $posts;
+        return $this;
+    }
+
+    public function addPost(Post $post): self
+    {
+        $post->setCreatedBy($this);
+        $this->posts->add($post);
         return $this;
     }
 }

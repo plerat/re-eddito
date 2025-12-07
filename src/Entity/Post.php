@@ -1,0 +1,127 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
+#[ORM\Entity(repositoryClass: PostRepository::class)]
+# Manage CreatedAt in Entity with Doctrine Events
+#[ORM\HasLifecycleCallbacks]
+class Post
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $content = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
+    private ?User $createdBy = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'post', cascade: ['remove', 'persist'])]
+    private ?Collection $medias = null;
+
+
+    public function __construct()
+    {
+        $this->medias = new ArrayCollection();
+    }
+
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context, mixed $payload): void
+    {
+        if ($this->content === null && $this->medias->count() === 0) {
+            $context
+                ->buildViolation('You need to specify at least one content or media')
+                ->addViolation();
+        }
+
+    }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(?string $content): static
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAt(): static
+    {
+        $this->createdAt = New \DateTimeImmutable();
+
+        return $this;
+    }
+
+
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function setMedias(Collection $medias): self
+    {
+        $this->medias = $medias;
+        return $this;
+    }
+
+    public function addMedia(Media $media): self
+    {
+        $media->setPost($this);
+        $this->medias->add($media);
+        return $this;
+    }
+
+}
