@@ -58,30 +58,20 @@ class ResetPasswordController extends AbstractController
         ValidatorInterface $validator
     ): Response
     {
-        $form = $this->createForm(ResetPasswordType::class)->handleRequest($request);
+        $user = $token->getUser();
+        $form = $this->createForm(ResetPasswordType::class, $user)->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            $user = $token->getUser();
+        if ($form->isSubmitted() && $form->isValid()) {
             if (!$user) {
                 throw new NotFoundHttpException();
             }
-            $plainPassword = $form->getData()['plainPassword'];
-            $user->setPlainPassword($plainPassword);
-            // Here we validate the user here because the form is not mapped with entity
-            $violations = $validator->validate($user);
-            if (count($violations) > 0) {
-                foreach ($violations as $violation) {
-                    $form->get('plainPassword')->addError(new FormError($violation->getMessage()));
-                }
-            }
-            if ($form->isValid()) {
-                $user->setPassword($passwordHasher->hashPassword($user, $form->getData()['plainPassword']));
-                $user->setIsEnabled(true);
-                $entityManager->persist($user);
-                $entityManager->flush();
-                $this->addFlash('Success', 'Password reset');
-                return $this->redirectToRoute('app_login');
-            }
+            $user->setPassword($passwordHasher->hashPassword($user, $user->getPlainPassword()));
+            $user->setIsEnabled(true);
+            $entityManager->persist($user);
+            $entityManager->flush();
+            $this->addFlash('Success', 'Password reset');
+            return $this->redirectToRoute('app_login');
+
         }
         return $this->render('resetpassword/reset_password.html.twig', [
             'resetPasswordForm' => $form->createView()
