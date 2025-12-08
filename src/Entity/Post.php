@@ -7,8 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 # Manage CreatedAt in Entity with Doctrine Events
@@ -41,16 +39,7 @@ class Post
         $this->medias = new ArrayCollection();
     }
 
-    #[Assert\Callback]
-    public function validate(ExecutionContextInterface $context, mixed $payload): void
-    {
-        if ($this->content === null && $this->medias->count() === 0) {
-            $context
-                ->buildViolation('You need to specify at least one content or media')
-                ->addViolation();
-        }
 
-    }
     public function getId(): ?int
     {
         return $this->id;

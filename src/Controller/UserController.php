@@ -12,9 +12,6 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class UserController extends AbstractController
 {
-
-
-
     #[Route('/profile', name: 'app_profile')]
     public function profile(): Response
     {

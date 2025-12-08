@@ -4,6 +4,7 @@ namespace App\Service\FileUploader;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Entity\Media;
 
 class MediaUploaderService {
     private string $uploadMediaDirectory;
@@ -27,5 +28,10 @@ class MediaUploaderService {
             'filename' => $newFilename,
             'type' => $fileType,
         ];
+    }
+
+    public function unlinkMedia(Media $file): void
+    {
+        unlink($this->uploadMediaDirectory.$file->getName());
     }
 }
