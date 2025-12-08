@@ -41,13 +41,13 @@ class UserFixtures extends Fixture
             ]
         ];
 
-        foreach ($usersData as $data) {
+        foreach ($usersData as $userdata) {
             $user = new User()
-                ->setEmail($data['email'])
-                ->setPseudo($data['pseudo'] )
-                ->setPlainPassword($data['password'])
-                ->setRoles([$data['roles']])
-                ->setIsEnabled($data['enabled']);
+                ->setEmail($userdata['email'])
+                ->setPseudo($userdata['pseudo'] )
+                ->setPlainPassword($userdata['password'])
+                ->setRoles([$userdata['roles']])
+                ->setIsEnabled($userdata['enabled']);
 
             $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPlainPassword()));
             $manager->persist($user);
