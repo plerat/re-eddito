@@ -2,20 +2,17 @@
 
 namespace App\Controller;
 
-
-use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_USER', statusCode: 403)]
-final class UserController extends AbstractController
+#[IsGranted('ROLE_ADMIN', message: 'Access denied', statusCode: 403)]
+final class AdminController extends AbstractController
 {
-    #[Route('/profile', name: 'app_profile')]
-    public function profile(): Response
+    #[Route('/admin', name: 'app_admin')]
+    public function index(): Response
     {
-        return $this->render('user/profile.html.twig',[]);
+        return $this->render('admin/index.html.twig',);
     }
 }

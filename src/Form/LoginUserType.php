@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 final class LoginUserType extends AbstractType
 {
@@ -14,10 +15,20 @@ final class LoginUserType extends AbstractType
     {
         $builder
             ->add('_username', EmailType::class, [
-                'label' => 'Email'
+                'label' => 'Email',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter your email'
+                    ]),
+                ]
             ])
             ->add('_password', PasswordType::class, [
-                'label' => 'Password'
+                'label' => 'Password',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter your password'
+                    ]),
+    ]
             ])
             ->add('_remember_me', CheckboxType::class, [
                 'required' => false,

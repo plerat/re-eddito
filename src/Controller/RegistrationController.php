@@ -28,6 +28,7 @@ final class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid())
         {
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPlainPassword()));
+            $user->setRoles(['ROLE_USER']);
             $entityManager->persist($user);
             $entityManager->flush();
             return $this->redirectToRoute('app_send_verification_email', [
