@@ -16,19 +16,9 @@ final class LoginUserType extends AbstractType
         $builder
             ->add('_username', EmailType::class, [
                 'label' => 'Email',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter your email'
-                    ]),
-                ]
             ])
             ->add('_password', PasswordType::class, [
                 'label' => 'Password',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter your password'
-                    ]),
-    ]
             ])
             ->add('_remember_me', CheckboxType::class, [
                 'required' => false,
