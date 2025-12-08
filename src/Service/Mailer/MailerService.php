@@ -32,7 +32,7 @@ class MailerService
         $email= (new TemplatedEmail())
             ->from('noreply@re-eddito.xyz')
             ->to($to)
-            ->subject('Request to reset your password')
+            ->subject('Request to reset your password on Re-eddito')
             ->htmlTemplate('email/request_reset_password.html.twig')
             ->locale('fr')
             ->context([

@@ -13,10 +13,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['pseudo'], message: 'There is already an account with this nickname')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -26,14 +28,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Uuid $id = null;
 
     #[ORM\Column(length: 255,type: Types::STRING, unique: true)]
+    #[Assert\NotBlank(message: 'A valid email is required')]
+    #[Assert\Email(message: 'This email is not valid')]
     private ?string $email = null;
 
     #[ORM\Column(length: 255,type: Types::STRING)]
     private ?string $password = null;
 
+    #[Assert\NotBlank(message: 'A valid password is required')]
+    #[Assert\PasswordStrength(
+        minScore: Assert\PasswordStrength::STRENGTH_MEDIUM,
+        message: "Your password is too weak : make sure it's at least 16 characters with capital letters, numbers and symbols"
+    )]
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 255, type: Types::STRING, unique: true)]
+    #[Assert\NotBlank(message: 'A nickname is required')]
     private ?string $pseudo = null;
 
     #[ORM\Column(type: 'json')]

@@ -1,4 +1,4 @@
-{% block subject %}Validation d'email{% endblock subject %}
+{% block subject %}Validation de votre compte sur re-eddito{% endblock subject %}
 
 {% block text %}
     Rendez vous sur le lien suivant : {{ absolute_url(path('app_register_validate', {'value': token.value})) }}

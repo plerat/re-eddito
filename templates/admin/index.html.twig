@@ -1,0 +1,6 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <p>Hello {{ app.user.email }}</p>
+    <p>Vous avez le droit d'être parce que vous avez {{ app.user.roles|join('|') }}</p>
+{% endblock %}
