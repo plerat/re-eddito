@@ -61,11 +61,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'user', cascade: ['persist'])]
     private ?Collection $posts;
 
+    /**
+     * @var Collection<int, Comment>
+     */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'createdBy')]
+    private Collection $comments;
+
 
     public function __construct()
     {
         $this->tokens = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -199,6 +206,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $post->setCreatedBy($this);
         $this->posts->add($post);
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getCreatedBy() === $this) {
+                $comment->setCreatedBy(null);
+            }
+        }
+
         return $this;
     }
 }
