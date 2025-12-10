@@ -83,7 +83,6 @@ final class CommentController extends AbstractController
             $entityManager->flush();
             return $this->redirectToRoute('app_post_show', ['id' => $postId,]);
         }
-
         return $this->render('comment/edit.html.twig', [
             'comment' => $comment,
             'form' => $form,
