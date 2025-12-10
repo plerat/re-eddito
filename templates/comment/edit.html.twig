@@ -7,7 +7,11 @@
 
     {{ include('comment/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_comment_index') }}">back to list</a>
+    {% if comment.parent %}
+        <a href="{{ path('app_comment_show', {'id': comment.id}) }}">back to list</a>
+    {% else %}
+        <a href="{{ path('app_post_show', {'id': postId}) }}">back to list</a>
+    {% endif %}
 
     {{ include('comment/_delete_form.html.twig') }}
 {% endblock %}

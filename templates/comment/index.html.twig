@@ -8,32 +8,31 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Content</th>
-                <th>CreatedAt</th>
-                <th>IsDeleted</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for comment in post.comments %}
-            <tr>
-                <td>{{ comment.id }}</td>
-                <td>{{ comment.content }}</td>
-                <td>{{ comment.createdAt ? comment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ comment.isDeleted ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_comment_show', {'id': comment.id}) }}">show</a>
-                    <a href="{{ path('app_comment_edit', {'id': comment.id}) }}">edit</a>
-                </td>
-            </tr>
+        {% if post is defined and post.comments is not empty  %}
+            {% for comment in post.comments %}
+                {% if not comment.parent %}
+                <tr>
+                    <td>{{ comment.content }}</td>
+                    <td>
+                        <a href="{{ path('app_comment_show', {'id': comment.id}) }}">Show</a>
+                        <a href="{{ path('app_comment_edit', {'id': comment.id}) }}">Edit</a>
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
         {% else %}
             <tr>
                 <td colspan="5">no records found</td>
             </tr>
-        {% endfor %}
+        {% endif %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_comment_new', {'id': post.id}) }}">Create new</a>
+    {% if post is defined and post.comments is not empty  %}
+        <a href="{{ path('app_comment_new', {'id': post.id}) }}">Create new</a>
+    {% endif %}
 {% endblock %}

@@ -35,7 +35,6 @@ final class CommentController extends AbstractController
         ]);
     }
 
-
     # add comment on a  post
     #[Route('/post/{id}/comment/new', name: 'app_comment_new', methods: ['GET', 'POST'])]
     public function new(
@@ -70,12 +69,6 @@ final class CommentController extends AbstractController
     }
 
 
-    //TODO Faire le display pour un comment (afficher les commentaires d'un commentaire)
-    #[Route('/comment/{id}', name: 'app_reply_index', methods: ['GET'])]
-    public function index_reply(): Response {
-
-    }
-
     #add a reply (comment) on a comment
     #[Route('/comment/{id}/reply', name: 'app_comment_reply', methods: ['GET', 'POST'])]
     public function reply(
@@ -84,6 +77,7 @@ final class CommentController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response
     {
+
         $comment = new Comment();
         $comment->setParent($commentParent);
         $comment->setPost($commentParent->getPost());
@@ -94,10 +88,12 @@ final class CommentController extends AbstractController
             $entityManager->persist($comment);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_comment_show', [
+                'id' => $comment->getId(),
+            ], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('comment/new.html.twig', [
+        return $this->render('comment/reply.html.twig', [
             'comment' => $comment,
             'form' => $form,
         ]);
@@ -112,22 +108,34 @@ final class CommentController extends AbstractController
             'postId' => $postId,
         ]);
     }
+//
+//    //TODO Faire le display pour un comment (afficher les commentaires d'un commentaire)
+//    #[Route('/comment/{id}', name: 'app_reply_index', methods: ['GET'])]
+//    public function index_reply(Comment $comment, CommentRepository $commentRepository): Response {
+//        return $this->render('comment/index.html.twig', [
+//            'comment' => $commentRepository->find($comment->getId()),
+//        ]);
+//    }
 
     #[Route('/comment/{id}/edit', name: 'app_comment_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
     {
+        $postId = $comment->getPost()->getId();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_post_show', [
+                'id' => $postId,
+            ], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('comment/edit.html.twig', [
             'comment' => $comment,
             'form' => $form,
+            'postId' => $postId,
         ]);
     }
 
@@ -139,6 +147,15 @@ final class CommentController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
+        $parent = $comment->getParent();
+        if ($parent !== null) {
+            return $this->redirectToRoute('app_comment_show', [
+                'id' => $parent->getId(),
+            ], Response::HTTP_SEE_OTHER);
+        }
+        $postId = $comment->getPost()->getId();
+        return $this->redirectToRoute('app_post_show', [
+            'id' => $postId,
+        ], Response::HTTP_SEE_OTHER);
     }
 }
