@@ -3,7 +3,7 @@
 {% block title %}Comment index{% endblock %}
 
 {% block body %}
-    <h1>Comment index</h1>
+    <h1>Liste des commentaires du post</h1>
 
     <table class="table">
         <thead>
@@ -13,8 +13,8 @@
             </tr>
         </thead>
         <tbody>
-        {% if post is defined and post.comments is not empty  %}
-            {% for comment in post.comments %}
+        {% if comments is not empty  %}
+            {% for comment in comments %}
                 {% if not comment.parent %}
                 <tr>
                     <td>{{ comment.content }}</td>

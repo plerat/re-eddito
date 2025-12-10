@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Media;
 use App\Entity\Post;
 use App\Form\PostNewType;
+use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use App\Service\FileUploader\MediaUploaderService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -62,10 +63,18 @@ final class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
-    public function show(Post $post): Response
+    public function show(
+        Post $post,
+        CommentRepository $commentRepository,
+    ): Response
     {
+        $comments = $commentRepository->findBy([
+            'post' => $post->getId(),
+            'parent' => null,
+        ]);
         return $this->render('post/show.html.twig', [
             'post' => $post,
+            'comments' => $comments,
         ]);
     }
 
