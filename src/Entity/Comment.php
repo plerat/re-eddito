@@ -24,16 +24,16 @@ class Comment
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
-    private ?bool $isDeleted = null;
+    private ?bool $isDeleted = False;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'replyTo')]
-    private ?self $comment = null;
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
+    private ?self $parent = null;
 
     /**
      * @var Collection<int, self>
      */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'comment')]
-    private Collection $replyTo;
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
+    private Collection $children;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
@@ -45,7 +45,7 @@ class Comment
 
     public function __construct()
     {
-        $this->replyTo = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -90,14 +90,14 @@ class Comment
         return $this;
     }
 
-    public function getComment(): ?self
+    public function getParent(): ?self
     {
-        return $this->comment;
+        return $this->parent;
     }
 
-    public function setComment(?self $comment): static
+    public function setParent(?self $parent): static
     {
-        $this->comment = $comment;
+        $this->parent = $parent;
 
         return $this;
     }
@@ -105,27 +105,27 @@ class Comment
     /**
      * @return Collection<int, self>
      */
-    public function getReplyTo(): Collection
+    public function getChildren(): Collection
     {
-        return $this->replyTo;
+        return $this->children;
     }
 
-    public function addReplyTo(self $replyTo): static
+    public function addChildren(self $children): static
     {
-        if (!$this->replyTo->contains($replyTo)) {
-            $this->replyTo->add($replyTo);
-            $replyTo->setComment($this);
+        if (!$this->children->contains($children)) {
+            $this->children->add($children);
+            $children->setParent($this);
         }
 
         return $this;
     }
 
-    public function removeReplyTo(self $replyTo): static
+    public function removeChildren(self $children): static
     {
-        if ($this->replyTo->removeElement($replyTo)) {
+        if ($this->children->removeElement($children)) {
             // set the owning side to null (unless already changed)
-            if ($replyTo->getComment() === $this) {
-                $replyTo->setComment(null);
+            if ($children->getParent() === $this) {
+                $children->setParent(null);
             }
         }
 
