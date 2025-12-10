@@ -8,7 +8,6 @@ use App\Form\PostNewType;
 use App\Repository\PostRepository;
 use App\Service\FileUploader\MediaUploaderService;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Exception\RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +21,7 @@ final class PostController extends AbstractController
     public function index(PostRepository $postRepository): Response
     {
         return $this->render('post/index.html.twig', [
-            'posts' => $postRepository->findAll(),
+            'posts' => $postRepository->findBy(['isDeleted' => false], ['createdAt' => 'DESC']),
         ]);
     }
 
@@ -61,9 +60,12 @@ final class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_post_show', methods: ['GET'],)]
     public function show(Post $post): Response
     {
+        if ($post->getIsDeleted() | !$post) {
+            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        }
         return $this->render('post/show.html.twig', [
             'post' => $post,
         ]);
@@ -105,16 +107,10 @@ final class PostController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->getPayload()->getString('_token'))) {
 
-            $entityManager->beginTransaction();
-                try {
-                    $entityManager->remove($post);
-                    $entityManager->flush();
+            $post->setIsDeleted(true);
+            $entityManager->persist($post);
+            $entityManager->flush();
 
-                } catch (\Exception $exception) {
-                    $entityManager->rollback();
-                    throw new RuntimeException("Unable to delete post",$exception->getCode(),$exception);
-                }
-            $entityManager->commit();
             foreach ( $post->getMedias() as $media )
             {
                 $uploader->unlinkMedia($media);
