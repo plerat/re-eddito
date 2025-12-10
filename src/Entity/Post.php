@@ -30,6 +30,10 @@ class Post
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $createdAt = null;
 
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private ?bool $isDeleted = False;
+
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'post', cascade: ['remove', 'persist'])]
     private ?Collection $medias = null;
 
@@ -101,6 +105,15 @@ class Post
         return $this;
     }
 
+    public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+    public function setIsDeleted(?bool $isDeleted): static
+    {
+        $this->isDeleted = $isDeleted;
+        return $this;
+    }
 
     public function getMedias(): Collection
     {
