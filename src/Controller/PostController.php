@@ -9,7 +9,6 @@ use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use App\Service\FileUploader\MediaUploaderService;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Exception\RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,6 +70,7 @@ final class PostController extends AbstractController
         $comments = $commentRepository->findBy([
             'post' => $post->getId(),
             'parent' => null,
+            'isDeleted' => false,
         ]);
         return $this->render('post/show.html.twig', [
             'post' => $post,
@@ -121,7 +121,7 @@ final class PostController extends AbstractController
 
                 } catch (\Exception $exception) {
                     $entityManager->rollback();
-                    throw new RuntimeException("Unable to delete post",$exception->getCode(),$exception);
+                    throw new \RuntimeException("Unable to delete post",$exception->getCode(),$exception);
                 }
             $entityManager->commit();
             foreach ( $post->getMedias() as $media )

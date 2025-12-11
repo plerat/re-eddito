@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
-use App\Entity\Post;
 use App\Form\CommentType;
-use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use App\Service\Comment\CommentService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -96,7 +94,8 @@ final class CommentController extends AbstractController
     public function delete(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($comment);
+            $comment->setIsDeleted(true);
+            $entityManager->persist($comment);
             $entityManager->flush();
         }
 
