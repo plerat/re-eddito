@@ -2,13 +2,14 @@
 
 namespace App\EventListener\Doctrine;
 
-use App\Entity\Post;
+
+use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
 use Symfony\Bundle\SecurityBundle\Security;
 
-#[AsEntityListener(event: Events::prePersist, entity: Post::class)]
-readonly class PostCreatedListener
+#[AsEntityListener(event: Events::prePersist, entity: Comment::class)]
+readonly class CommentCreatedListener
 {
     public function __construct(
         private Security $security,
@@ -16,11 +17,11 @@ readonly class PostCreatedListener
     {
 
     }
-    public function prePersist(Post $post): void
+    public function prePersist(Comment $comment): void
     {
-        if ($post->getCreatedBy() === null) {
+        if ($comment->getCreatedBy() === null) {
             $user = $this->security->getUser();
-            $post->setCreatedBy($user);
+            $comment->setCreatedBy($user);
         }
     }
 }

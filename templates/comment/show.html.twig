@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Comment{% endblock %}
+
+{% block body %}
+    <h1>Comment</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Content</th>
+                <td>{{ comment.content }}</td>
+            </tr>
+        </tbody>
+        {% if comment.children %}
+            {% for children in comment.children %}
+                <tr>
+                    <td>{{ children.content }}</td>
+                    <td>
+                        <a href="{{ path('app_comment_show', {'id': children.id}) }}">show</a>
+                        <a href="{{ path('app_comment_edit', {'id': children.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
+
+    {% if comment.parent %}
+        <a href="{{ path('app_comment_show', {'id': comment.parent.id}) }}">back to list</a>
+    {% else %}
+        <a href="{{ path('app_post_show', {'id': postId}) }}">back to list</a>
+    {% endif %}
+
+    <a href="{{ path('app_comment_edit', {'id': comment.id}) }}">edit</a>
+    <a href="{{ path('app_comment_reply', {'id': comment.id}) }}">Répondre</a>
+
+    {{ include('comment/_delete_form.html.twig') }}
+{% endblock %}

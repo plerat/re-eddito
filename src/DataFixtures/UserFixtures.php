@@ -8,50 +8,35 @@ use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserFixtures extends Fixture
 {
-    private UserPasswordHasherInterface $passwordHasher;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
-    {
-        $this->passwordHasher = $passwordHasher;
-    }
+    public const string USER_REFERENCE = 'user';
+    public const string ADMIN_USER_REFERENCE = 'admin';
+    public function __construct(
+        private readonly UserPasswordHasherInterface $passwordHasher)
+    {}
 
     public function load(ObjectManager $manager): void
     {
-        $usersData = [
-            [
-                'email' => 'admin@admin.xyz',
-                'password' => 'admin',
-                'pseudo' => 'admin',
-                'roles' => 'ROLE_ADMIN',
-                'enabled' => true,
-            ],
-            [
-                'email' => 'user@user.xyz',
-                'password' => 'user',
-                'pseudo' => 'user',
-                'roles' => 'ROLE_USER',
-                'enabled' => true,
-            ],
-            [
-                'email' => 'userNoEnabled@user.xyz',
-                'password' => 'userNoEnabled',
-                'pseudo' => 'userNoEnabled',
-                'roles' => 'ROLE_USER',
-                'enabled' => false,
-            ]
-        ];
+        $adminUser = new User()
+            ->setEmail('admin@admin.xyz')
+            ->setPseudo('admin')
+            ->setPlainPassword('admin')
+            ->setRoles(['ROLE_ADMIN'])
+            ->setIsEnabled(true);
 
-        foreach ($usersData as $userdata) {
-            $user = new User()
-                ->setEmail($userdata['email'])
-                ->setPseudo($userdata['pseudo'] )
-                ->setPlainPassword($userdata['password'])
-                ->setRoles([$userdata['roles']])
-                ->setIsEnabled($userdata['enabled']);
+        $adminUser->setPassword($this->passwordHasher->hashPassword($adminUser, $adminUser->getPlainPassword()));
+        $manager->persist($adminUser);
+        $this->addReference(self::ADMIN_USER_REFERENCE, $adminUser);
 
-            $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPlainPassword()));
-            $manager->persist($user);
-        }
+        $user = new User()
+            ->setEmail('user@user.xyz')
+            ->setPseudo('user')
+            ->setPlainPassword('user')
+            ->setRoles(['ROLE_USER'])
+            ->setIsEnabled(true);
+
+        $user->setPassword($this->passwordHasher->hashPassword($user, $user->getPlainPassword()));
+        $manager->persist($user);
+        $this->addReference(self::USER_REFERENCE, $user);
 
         $manager->flush();
     }

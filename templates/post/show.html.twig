@@ -46,4 +46,7 @@
     <a href="{{ path('app_post_edit', {'id': post.id}) }}">edit</a>
 
     {{ include('post/_delete_form.html.twig') }}
+
+    <a href="{{ path('app_comment_new', {'id': post.id}) }}">Ajouter un commentaire</a>
+    {{ include('comment/index.html.twig', {'id': post.id}) }}
 {% endblock %}
