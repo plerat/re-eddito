@@ -5,13 +5,15 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Repository\PostRepository;
+use App\Security\CommentVoter;
 use App\Service\Comment\CommentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+#[IsGranted("ROLE_USER")]
 final class CommentController extends AbstractController
 {
     # add comment on a  post
@@ -73,6 +75,7 @@ final class CommentController extends AbstractController
     }
 
     #[Route('/comment/{id}/edit', name: 'app_comment_edit', methods: ['GET', 'POST'])]
+    #[IsGranted(CommentVoter::EDIT_COMMENT, 'comment')]
     public function edit(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
     {
         $postId = $comment->getPost()->getId();
@@ -91,6 +94,7 @@ final class CommentController extends AbstractController
     }
 
     #[Route('comment/{id}', name: 'app_comment_delete', methods: ['POST'])]
+    #[IsGranted(CommentVoter::DELETE_COMMENT, 'comment')]
     public function delete(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->getPayload()->getString('_token'))) {

@@ -22,7 +22,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($firstComment);
 
         $SecondComment = new Comment()
-            ->setContent("Oué t'as trop raison mec, je m'en sors avec mon gros cul")
+            ->setContent("Oué t'as trop raison mec, je m'en sors pas avec mon gros cul")
             ->setCreatedBy($this->getReference(UserFixtures::ADMIN_USER_REFERENCE, User::class))
             ->setPost($this->getReference(PostFixtures::SECOND_POST_REFERENCE, Post::class));
         $manager->persist($SecondComment);
