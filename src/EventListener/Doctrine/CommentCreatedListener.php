@@ -19,7 +19,9 @@ readonly class CommentCreatedListener
     }
     public function prePersist(Comment $comment): void
     {
-        $user = $this->security->getUser();
-        $comment->setCreatedBy($user);
+        if ($comment->getCreatedBy() === null) {
+            $user = $this->security->getUser();
+            $comment->setCreatedBy($user);
+        }
     }
 }

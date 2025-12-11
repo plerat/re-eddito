@@ -18,7 +18,9 @@ readonly class PostCreatedListener
     }
     public function prePersist(Post $post): void
     {
-        $user = $this->security->getUser();
-        $post->setCreatedBy($user);
+        if ($post->getCreatedBy() === null) {
+            $user = $this->security->getUser();
+            $post->setCreatedBy($user);
+        }
     }
 }
