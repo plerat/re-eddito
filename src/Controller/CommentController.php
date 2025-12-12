@@ -100,6 +100,9 @@ final class CommentController extends AbstractController
         }
 
         $parent = $comment->getParent();
+        if (in_array('ROLE_ADMIN',$this->getUser()->getRoles())){
+            return $this->render('admin/index.html.twig');
+        }
         if ($parent !== null) {
             return $this->redirectToRoute('app_comment_show', ['id' => $parent->getId(),]);
         }

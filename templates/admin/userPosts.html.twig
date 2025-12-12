@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    ><a href="{{ path('app_admin')}}">Admin</a>><a href="{{ path('app_admin_user_list')}}">users</a>><a href="{{ path('app_admin_user_post',{'id':user.id}) }}">{{ user.pseudo }}/post</a>
+    <br>
+    <a href="{{ path('app_admin_user_comment',{'id':user.id})}}">voir les commentaires</a>
+
+    <p>pseudo : {{ user.pseudo }}</p>
+
+    {% if posts %}
+        {% for post in posts %}
+            {{ include('admin/post/show.html.twig',{ 'post' : post,'user':user }) }}
+        {% endfor %}
+    {% else %}
+        <p> aucun post</p>
+    {% endif %}
+{% endblock %}

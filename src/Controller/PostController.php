@@ -87,12 +87,24 @@ final class PostController extends AbstractController
         Request $request,
         Post $post,
         EntityManagerInterface $entityManager,
+        MediaUploaderService $uploader
     ): Response
     {
         $form = $this->createForm(PostNewType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $uploadedFile = $form->get('media')->getData();
+            if ($uploadedFile instanceof UploadedFile) {
+                $mediaData = $uploader->handleMedia($uploadedFile);
+                $media = new Media();
+                $media->setOriginalName($uploadedFile->getClientOriginalName());
+                $media->setName($mediaData['filename']);
+                $media->setType($mediaData['type']);
+                $media->setPost($post);
+                $entityManager->persist($media);
+            }
+            $entityManager->persist($post);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_post_show', [
@@ -125,6 +137,10 @@ final class PostController extends AbstractController
             {
                 $uploader->unlinkMedia($media);
             }
+        }
+        if (in_array('ROLE_ADMIN',$this->getUser()->getRoles())){
+            return $this->redirectToRoute('app_admin_post_list', [], Response::HTTP_SEE_OTHER);
+
         }
         return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
     }

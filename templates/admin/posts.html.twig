@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    ><a href="{{ path('app_admin')}}">Admin</a>><a href="{{ path('app_admin_post_list')}}">post</a>
+
+    <p>Hello {{ app.user.email }}</p>
+    <p>Vous avez le droit d'être parce que vous avez {{ app.user.roles|join('|') }}</p>
+
+    {% if posts %}
+        {% for post in posts %}
+            {{ include('admin/post/show.html.twig',{ 'post' : post }) }}
+        {% endfor %}
+    {% else %}
+        <p> aucun post</p>
+    {% endif %}
+{% endblock %}
