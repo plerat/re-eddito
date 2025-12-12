@@ -38,6 +38,15 @@ class UserFixtures extends Fixture
         $manager->persist($user);
         $this->addReference(self::USER_REFERENCE, $user);
 
+        $shadowUser = new User()
+            ->setEmail('shadow@shadow.xyz')
+            ->setPseudo('shadow')
+            ->setPlainPassword('shadow')
+            ->setRoles(['ROLE_USER'])
+            ->setIsEnabled(true);
+        $shadowUser->setPassword($this->passwordHasher->hashPassword($shadowUser, $shadowUser->getPlainPassword()));
+        $manager->persist($shadowUser);
+
         $manager->flush();
     }
 }

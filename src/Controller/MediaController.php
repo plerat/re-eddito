@@ -3,16 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Media;
+use App\Security\Voter\MediaVoter;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Exception\RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
+#[IsGranted("ROLE_USER")]
 class MediaController extends AbstractController
 {
 
@@ -25,6 +26,7 @@ class MediaController extends AbstractController
     }
 
     #[Route('/medias/delete/{id}', name: 'app_media_delete', methods: ['POST'])]
+    #[IsGranted(MediaVoter::DELETE_MEDIA, 'media')]
     public function deleteMedia(
         Request $request,
         Media $media,
@@ -41,7 +43,7 @@ class MediaController extends AbstractController
                 unlink($filePath);
             } catch (\Exception $exception) {
                 $entityManager->rollBack();
-                throw new RuntimeException("An error occurred during the deletion", $exception->getCode(), $exception);
+                throw new \RuntimeException("An error occurred during the deletion", $exception->getCode(), $exception);
             }
             $entityManager->commit();
         }

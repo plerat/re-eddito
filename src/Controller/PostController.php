@@ -7,6 +7,7 @@ use App\Entity\Post;
 use App\Form\PostNewType;
 use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
+use App\Security\Voter\PostVoter;
 use App\Service\FileUploader\MediaUploaderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,8 +15,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/post')]
+#[IsGranted("ROLE_USER")]
 final class PostController extends AbstractController
 {
     #[Route(name: 'app_post_index', methods: ['GET'])]
@@ -82,6 +85,7 @@ final class PostController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
+    #[IsGranted(PostVoter::EDIT_POST, 'post')]
     public function edit
     (
         Request $request,
@@ -119,6 +123,7 @@ final class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
+    #[IsGranted(PostVoter::DELETE_POST, 'post')]
     public function delete
     (
         Request $request,
