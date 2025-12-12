@@ -7,7 +7,7 @@ use App\Entity\Post;
 use App\Form\PostNewType;
 use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
-use App\Security\PostVoter;
+use App\Security\Voter\PostVoter;
 use App\Service\FileUploader\MediaUploaderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
