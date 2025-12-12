@@ -58,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Token::class, mappedBy: 'user', cascade: ['persist'])]
     private ?Collection $tokens;
 
-    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'user', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'createdBy', cascade: ['persist'])]
     private ?Collection $posts;
 
     /**
