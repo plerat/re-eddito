@@ -2,15 +2,10 @@
 
 namespace App\Tests\Unit\Service\Token;
 
-use App\Entity\Token;
-use App\Entity\User;
 use App\Service\Token\TokenService;
-use Doctrine\Persistence\ObjectRepository;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-
-class TokenServiceTest extends WebTestCase
+class TokenServiceTest extends KernelTestCase
 {
     private TokenService $tokenService;
 
