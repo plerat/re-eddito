@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Service\Comment\CommentService;
+use App\Service\Post\PostService;
+use App\Service\User\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,4 +19,48 @@ final class AdminController extends AbstractController
     {
         return $this->render('admin/index.html.twig',);
     }
+    #[Route('/admin/users', name: 'app_admin_user_list')]
+    public function userList(UserService $userService): Response
+    {
+        $users = $userService->retrieveAllUsers();
+        return $this->render('admin/users.html.twig',["users"=>$users]);
+    }
+    #[Route('/admin/user/{id}/post', name: 'app_admin_user_post')]
+    public function adminUserPost(PostService $postService,CommentService $commentService, User $user): Response
+    {
+        $post = $postService->retrieveAllPostFromUser($user);
+        $comments = $commentService->retrieveAllCommentFromUser($user);
+        return $this->render('admin/userPosts.html.twig',
+            [
+                'user'=>$user,
+                'posts'=>$post,
+            ]);
+    }
+    #[Route('/admin/user/{id}/comment', name: 'app_admin_user_comment')]
+    public function userProfile(PostService $postService,CommentService $commentService, User $user): Response
+    {
+        $comments = $commentService->retrieveAllCommentFromUser($user);
+        return $this->render('admin/userComments.html.twig',
+            [
+                'user'=>$user,
+                'comments'=>$comments
+            ]);
+    }
+
+    #[Route('/admin/posts', name: 'app_admin_post_list')]
+    public function postList(PostService $postService): Response
+    {
+        $post = $postService->retrieveAllPosts();
+        return $this->render('admin/posts.html.twig',["posts"=>$post]);
+    }
+    #[Route('/admin/comments', name: 'app_admin_comment_list')]
+    public function commentList(CommentService $commentService): Response
+    {
+        $comment = $commentService->retrieveAllComments();
+        return $this->render('admin/comments.html.twig',["comments"=>$comment]);
+    }
+
+
+
+
 }

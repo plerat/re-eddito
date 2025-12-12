@@ -1,6 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <h1>ADMIN HOME PAGE</h1>
+    ><a href="{{ path('app_admin')}}">Admin</a>
     <p>Hello {{ app.user.email }}</p>
     <p>Vous avez le droit d'être parce que vous avez {{ app.user.roles|join('|') }}</p>
+
+    <a href="{{ path('app_admin_user_list') }}">gêrer les comptes utilisateurs</a>
+    <br>
+    <a href="{{ path('app_admin_post_list') }}">gêrer les posts</a>
+    <br>
+    <a href="{{ path('app_admin_comment_list') }}">gêrer les commentaires</a>
+
+
 {% endblock %}
