@@ -1,8 +1,28 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Profil{% endblock %}
+
 {% block body %}
-    <p>Hello {{ app.user.email }}</p>
-    <a href="{{ path('app_logout') }}">Se déconnecter</a>
+    <h1>Mon profil</h1>
+
+    <div>
+        <p><strong>Email</strong> : {{ app.user.email }}</p>
+        <p><strong>Pseudo</strong> : {{ app.user.pseudo }}</p>
+
+        {% if error %}
+            <p><strong>{{ error }}</strong></p>
+        {% endif %}
+
+        {{ form_start(form) }}
+            {{ form_row(form.pseudo) }}
+            {{ form_row(form._password) }}
+            <button type="submit">Mettre à jour le pseudo</button>
+        {{ form_end(form) }}
+    </div>
+
+    <p>
+        <a href="{{ path('app_logout') }}">Se déconnecter</a>
+    </p>
 {% endblock %}
 
 
