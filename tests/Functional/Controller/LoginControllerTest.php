@@ -23,4 +23,15 @@ class LoginControllerTest extends WebTestCase
         $crawler = $client->submit($form);
         $this->assertResponseRedirects('/');
     }
+
+    public function testLoginWithWrongCredentials(): void {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Login')->form();
+        $form['_username'] = 'wrong@wrong.xyz';
+        $form['_password'] = 'wrong';
+        $crawler = $client->submit($form);
+        $this->assertResponseStatusCodeSame(302);
+        $this->assertResponseRedirects('/login');
+    }
 }

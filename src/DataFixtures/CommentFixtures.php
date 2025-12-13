@@ -26,6 +26,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
             ->setCreatedBy($this->getReference(UserFixtures::ADMIN_USER_REFERENCE, User::class))
             ->setPost($this->getReference(PostFixtures::SECOND_POST_REFERENCE, Post::class));
         $manager->persist($SecondComment);
+
         $manager->flush();
     }
 
