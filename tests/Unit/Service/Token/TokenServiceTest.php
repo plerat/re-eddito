@@ -30,7 +30,7 @@ class TokenServiceTest extends TestCase
         $tokenValue = $this->tokenService->generateTokenValue();
         $this->assertisString($tokenValue, "Token is not a string");
         $this->assertSame(64, strlen($tokenValue), "Token length is not 64");
-        $this->assertDoesNotMatchRegularExpression('/[^A-Za-z0-9\-._~]/', $tokenValue);
+        $this->assertDoesNotMatchRegularExpression('/[^A-Fa-f0-9]/', $tokenValue);
     }
 
     public function testGenerateToken(): void {

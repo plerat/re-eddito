@@ -14,8 +14,8 @@ class RegistrationControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/register');
-
         $this->assertResponseIsSuccessful();
+
         $this->assertSelectorExists('form');
         $this->assertSelectorExists('input[name="register_user[email]"]');
         $this->assertSelectorExists('input[name="register_user[pseudo]"]');
@@ -36,7 +36,6 @@ class RegistrationControllerTest extends WebTestCase
         $form['register_user[plainPassword][second]'] = '{7W5YE}?e7S#pq5c';
 
         $crawler = $client->submit($form);
-
 
         $userNotValidYet = $entityManager->getRepository(User::class)->findOneBy([
             'email' => 'testRegister@test.xyz',
