@@ -27,19 +27,27 @@
     <footer class="post-footer">
         <div class="post-actions">
 
-            <a class="post-link"
-               href="{{ path('app_post_show', {'id': post.id}) }}">
-                Voir
-            </a>
+            <div class="post-actions-left">
+                <a class="post-link"
+                   href="{{ path('app_post_show', {'id': post.id}) }}">
+                    Voir
+                </a>
 
-            <a class="post-link"
-               href="{{ path('app_post_edit', {'id': post.id}) }}">
-                Éditer
-            </a>
+                {% if app.user and app.user.id == post.createdBy.id %}
+                    <a class="post-link"
+                       href="{{ path('app_post_edit', {'id': post.id}) }}">
+                        Éditer
+                    </a>
+                {% endif %}
+            </div>
 
-            {{ include('post/_delete_form.html.twig', { post: post }) }}
+
+            <div class="post-actions-right">
+                {{ include('post/_delete_form.html.twig', { post: post }) }}
+            </div>
 
         </div>
     </footer>
+
 
 </article>
