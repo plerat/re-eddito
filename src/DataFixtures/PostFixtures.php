@@ -31,8 +31,8 @@ class PostFixtures extends Fixture implements DependentFixtureInterface
                 c'est vraiment naze ? Je paye pas mon coca 3 euros pour être mal assis")
             ->setCreatedBy($this->getReference(UserFixtures::USER_REFERENCE, User::class));
         $this->addReference(self::SECOND_POST_REFERENCE, $secondPost);
-
         $manager->persist($secondPost);
+
         $manager->flush();
     }
 

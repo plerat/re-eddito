@@ -33,7 +33,7 @@ final class CommentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $commentService->createCommentOnPost($post, $comment);
-            return $this->redirectToRoute('app_post_show', ['id' => $id]);
+            return $this->redirectToRoute('app_post_show', ['id' => $id], Response::HTTP_SEE_OTHER);
         }
         return $this->render('comment/new.html.twig', [
             'form' => $form,
