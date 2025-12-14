@@ -51,6 +51,11 @@ Run fixtures in database
 ddev console doctrine:fixtures:load
 ```
 
+Build front
+```bash
+ddev console asset-map:compile
+```
+
 ## Work with the project
 Display all container working for the project and their adresses/url/port
 ```bash

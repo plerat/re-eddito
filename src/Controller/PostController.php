@@ -10,6 +10,7 @@ use App\Repository\PostRepository;
 use App\Security\Voter\PostVoter;
 use App\Service\FileUploader\MediaUploaderService;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,10 +22,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class PostController extends AbstractController
 {
     #[Route(name: 'app_home', methods: ['GET'])]
-    public function index(PostRepository $postRepository): Response
+    public function index(PostRepository $postRepository, Request $request, PaginatorInterface $paginator): Response
     {
+        $page = (int) $request->query->get('page', 1);
+        $query = $postRepository->findPostsQuery();
+        $pagination = $paginator->paginate($query, $page, 10);
         return $this->render('post/index.html.twig', [
-            'posts' => $postRepository->findBy(['isDeleted' => false], ['createdAt' => 'DESC']),
+            'posts' => $pagination,
         ]);
     }
 

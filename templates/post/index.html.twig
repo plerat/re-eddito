@@ -4,6 +4,7 @@
 
 {% block body %}
 
+
     <section class="feed">
 
         <h1 class="feed-title">Derniers posts</h1>
@@ -79,7 +80,6 @@
         {% else %}
             <p class="empty-state">Aucun post pour le moment.</p>
         {% endfor %}
-
+        {{ knp_pagination_render(posts) }}
     </section>
-
 {% endblock %}
