@@ -3,9 +3,14 @@
 {% block title %}New Comment{% endblock %}
 
 {% block body %}
-    <h1>Create new Comment</h1>
+    <section class="feed">
+        <article class="post-card post-editor">
+            <h1 class="post-title">Create new comment</h1>
 
-    {{ include('comment/_form.html.twig') }}
+            {{ include('comment/_form.html.twig') }}
 
-    <a href="{{ path('app_post_show', {'id': postId}) }}">back to the post</a>
+
+        </article>
+    </section>
+
 {% endblock %}

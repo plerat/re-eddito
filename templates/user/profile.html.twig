@@ -19,28 +19,33 @@
         </h1>
 
         {% if isOwner %}
-            <p class="profile-value">{{ user.email }}</p>
+            <div class="profile-edit">
+                {{ form_start(form) }}
+
+                <div class="profile-edit-row">
+                    {{ form_widget(form.pseudo, {
+                        attr: { placeholder: 'Nouveau pseudo' }
+                    }) }}
+
+                    {{ form_widget(form._password, {
+                        attr: { placeholder: 'Mot de passe' }
+                    }) }}
+
+                    <button type="submit" class="btn-primary btn-compact">
+                        Mettre à jour
+                    </button>
+                </div>
+
+                {{ form_end(form) }}
+
+                {% if error %}
+                    <p class="form-error">{{ error }}</p>
+                {% endif %}
+            </div>
         {% endif %}
+
     </section>
 
-    {% if isOwner %}
-        <section class="profile-card">
-            <h2 class="form-title">Changer mon pseudo</h2>
-
-            {% if error %}
-                <p class="form-error">{{ error }}</p>
-            {% endif %}
-
-            {{ form_start(form) }}
-            {{ form_row(form.pseudo) }}
-            {{ form_row(form._password) }}
-
-            <button type="submit" class="btn-primary">
-                Mettre à jour
-            </button>
-            {{ form_end(form) }}
-        </section>
-    {% endif %}
 
     <nav class="profile-tabs">
         <a href="#posts" class="profile-tab">Posts</a>
@@ -58,7 +63,7 @@
                 <div class="post-meta">
                     <span>{{ post.createdAt|date('d/m/Y H:i') }}</span>
 
-                    <div class="post-actions">
+                    <div class="post-actions-main">
                         <a class="post-link" href="{{ path('app_post_show', {'id': post.id}) }}">Voir</a>
 
                         {% if isOwner %}
@@ -82,7 +87,7 @@
                 <div class="post-meta">
                     <span>{{ comment.createdAt|date('d/m/Y H:i') }}</span>
 
-                    <div class="post-actions">
+                    <div class="post-actions-main">
                         <a class="post-link"
                            href="{{ path('app_comment_show', {'id': comment.id}) }}">
                             Voir
