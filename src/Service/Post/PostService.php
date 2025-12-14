@@ -11,7 +11,7 @@ class PostService
         private PostRepository $postRepository,
     ) {}
 
-    public function retrieveAllPostFromUser(User $user): array
+    public function getAllPostFromUser(User $user): array
     {
         return $this->postRepository
             ->findBy(

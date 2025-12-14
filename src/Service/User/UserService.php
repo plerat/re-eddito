@@ -41,7 +41,6 @@ class UserService
     public function updatePseudo(User $user, string $newPseudo): void
     {
         $user->setPseudo($newPseudo);
-        $this->entityManager->flush($user);
-        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 }

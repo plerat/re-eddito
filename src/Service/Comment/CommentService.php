@@ -11,23 +11,27 @@ class CommentService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-    ) {}
+    )
+    {
+    }
 
-    public function createCommentOnPost(Post $post, Comment $comment): void{
+    public function createCommentOnPost(Post $post, Comment $comment): void
+    {
         $comment->setPost($post);
         $comment->setParent(null);
         $this->entityManager->persist($comment);
         $this->entityManager->flush();
     }
 
-    public function createReplyOnComment(Comment $commentParent, Comment $replyComment): void{
+    public function createReplyOnComment(Comment $commentParent, Comment $replyComment): void
+    {
         $replyComment->setParent($commentParent);
         $replyComment->setPost($commentParent->getPost());
         $this->entityManager->persist($replyComment);
         $this->entityManager->flush();
     }
 
-    public function retrieveAllCommentFromUser(User $user): array
+    public function getUserComments(User $user): array
     {
         return $this->entityManager
             ->getRepository(Comment::class)
@@ -39,7 +43,8 @@ class CommentService
                 ['createdAt' => 'DESC']
             );
     }
-    public function retrieveAllComments(): array
+
+    public function getAllComments(): array
     {
         return $this->entityManager
             ->getRepository(Comment::class)
@@ -50,5 +55,17 @@ class CommentService
                 ['createdAt' => 'DESC']
             );
     }
-
+    
+    public function getVisibleChildren(Comment $comment): array
+    {
+        return $this->entityManager
+            ->getRepository(Comment::class)
+            ->findBy(
+                [
+                    'parent' => $comment,
+                    'isDeleted' => false,
+                ],
+                ['createdAt' => 'ASC']
+            );
+    }
 }

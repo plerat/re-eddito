@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include 'admin/layout/breadcrumb.html.twig' with {
+        items: [
+            { label: 'Commentaires', path: path('app_admin_comment_list') }
+        ]
+    } %}
+
+    <table>
+        <tbody>
+        {% for comment in comments %}
+            {{ include('admin/comment/_row.html.twig', { comment: comment }) }}
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
