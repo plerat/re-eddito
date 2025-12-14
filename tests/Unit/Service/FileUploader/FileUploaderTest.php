@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Service\FileUploader;
 use App\Service\FileUploader\MediaUploaderService;
 use PHPUnit\Framework\MockObject\Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\String\UnicodeString;
@@ -24,6 +25,10 @@ class FileUploaderTest extends KernelTestCase
                 return new UnicodeString($string);
             });
 
+        $filesystemMock = $this->createMock(Filesystem::class);
+        $filesystemMock->method('exists')->willReturn(true);
+        $filesystemMock->expects($this->never())->method('mkdir');
+
         $uploadedFileMock = $this->createMock(UploadedFile::class);
         $uploadedFileMock->method('getClientOriginalName')
             ->willReturn('my_image.jpg');
@@ -33,7 +38,7 @@ class FileUploaderTest extends KernelTestCase
             ->method('move')
             ->with($this->equalTo('/fake/folder'));
 
-        $uploaderService = new MediaUploaderService($sluggerStub, '/fake/folder');
+        $uploaderService = new MediaUploaderService($sluggerStub, '/fake/folder', $filesystemMock);
         $result = $uploaderService->handleMedia($uploadedFileMock);
 
         $this->assertArrayHasKey('filename', $result);
