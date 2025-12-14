@@ -41,9 +41,8 @@ Install composer requirements
 ```bash
 ddev composer install
 ```
-Create database and play migrations
+play migrations (database is created by default)
 ```bash
-ddev console doctrine:database:create
 ddev console doctrine:migrations:migrate
 ```
 
@@ -52,7 +51,7 @@ Run fixtures in database
 ddev console doctrine:fixtures:load
 ```
 
-## Work the project
+## Work with the project
 Display all container working for the project and their adresses/url/port
 ```bash
 ddev status 
@@ -69,6 +68,13 @@ Open the project in your browser
 ddev launch
 ```
 
+Users created in fixtures
+```
+id : user@user.xyz / pwd : user
+id : admin@admin.xyz / pwd : admin
+id : shadow@shadow.xyz / pwd : shadow
+```
+
 To shutdown DDEV. poweroff to shutdown all DDEV projects
 ```bash
 ddev stop
@@ -82,7 +88,7 @@ ddev console doctrine:database:create --env=test
 ```
 Run migration and datafixtures
 ```bash
-ddev console doctrine:migrations:migration --env=test
+ddev console doctrine:migrations:migrate --env=test
 ddev console doctrine:fixtures:load --env=test
 ```
 Run phpunit test
