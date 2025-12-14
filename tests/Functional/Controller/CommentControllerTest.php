@@ -26,7 +26,7 @@ class CommentControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('form');
 
-        $form = $crawler->selectButton('Save')->form([
+        $form = $crawler->selectButton('Valider')->form([
             'comment[content]' => 'test comment content']);
         $client->submit($form);
 

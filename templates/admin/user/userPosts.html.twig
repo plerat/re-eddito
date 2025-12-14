@@ -1,0 +1,23 @@
+{% extends '/base.html.twig' %}
+{% block body %}
+
+    {% include 'admin/layout/breadcrumb.html.twig' with {
+        items: [
+            { label: 'Utilisateurs', path: path('app_admin_user_list') },
+            { label: user.pseudo, path: path('app_admin_user_post', {'id': user.id}) },
+            { label: 'Posts', path: path('app_admin_user_post', {'id': user.id}) }
+        ]
+    } %}
+
+    <h2>Posts de {{ user.pseudo }}</h2>
+
+    {{ include('admin/user/_actions.html.twig', { user: user }) }}
+
+    {% if posts|length > 0 %}
+        {% for post in posts %}
+            {{ include('admin/post/_card.html.twig', { post: post }) }}
+        {% endfor %}
+    {% else %}
+        <p>Aucun post pour cet utilisateur.</p>
+    {% endif %}
+{% endblock %}

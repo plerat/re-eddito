@@ -17,11 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/post')]
 #[IsGranted("ROLE_USER")]
 final class PostController extends AbstractController
 {
-    #[Route(name: 'app_post_index', methods: ['GET'])]
+    #[Route(name: 'app_home', methods: ['GET'])]
     public function index(PostRepository $postRepository): Response
     {
         return $this->render('post/index.html.twig', [
@@ -29,7 +28,7 @@ final class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_post_new', methods: ['GET', 'POST'])]
+    #[Route('post/new', name: 'app_post_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -56,7 +55,7 @@ final class PostController extends AbstractController
             $entityManager->persist($post);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
         return $this->render('post/new.html.twig', [
             'post' => $post,
@@ -64,14 +63,14 @@ final class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_post_show', methods: ['GET'])]
+    #[Route('post/{id}', name: 'app_post_show', methods: ['GET'])]
     public function show(
         Post $post,
         CommentRepository $commentRepository,
     ): Response
     {
         if ($post->getIsDeleted() | !$post) {
-            return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
         $comments = $commentRepository->findBy([
             'post' => $post->getId(),
@@ -84,7 +83,7 @@ final class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
+    #[Route('post/{id}/edit', name: 'app_post_edit', methods: ['GET', 'POST'])]
     #[IsGranted(PostVoter::EDIT_POST, 'post')]
     public function edit
     (
@@ -96,7 +95,6 @@ final class PostController extends AbstractController
     {
         $form = $this->createForm(PostNewType::class, $post);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $uploadedFile = $form->get('media')->getData();
             if ($uploadedFile instanceof UploadedFile) {
@@ -122,7 +120,7 @@ final class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_post_delete', methods: ['POST'])]
+    #[Route('post/{id}', name: 'app_post_delete', methods: ['POST'])]
     #[IsGranted(PostVoter::DELETE_POST, 'post')]
     public function delete
     (
@@ -147,6 +145,6 @@ final class PostController extends AbstractController
             return $this->redirectToRoute('app_admin_post_list', [], Response::HTTP_SEE_OTHER);
 
         }
-        return $this->redirectToRoute('app_post_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -1,13 +1,66 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Post{% endblock %}
+{% block title %}Modifier le post{% endblock %}
 
 {% block body %}
-    <h1>Edit Post</h1>
 
-    {{ include('post/_form.html.twig', {'button_label': 'Update'}) }}
+    <section class="feed">
 
-    <a href="{{ path('app_post_index') }}">back to list</a>
+        <article class="post-card post-editor">
 
-    {{ include('post/_delete_form.html.twig') }}
+            <header class="post-header">
+                <h1 class="post-title">Modifier le post</h1>
+            </header>
+
+            {{ include('post/_form.html.twig', {
+                'button_label': 'Mettre à jour'
+            }) }}
+
+            {% if post.medias|length > 0 %}
+                <hr>
+
+                <h3 class="post-title">Médias</h3>
+
+                <div class="post-media">
+                    {% for media in post.medias %}
+                        <div class="post-card">
+
+                            {% if media.type in ['mp4','avi'] %}
+                                <video controls>
+                                    <source
+                                        src="{{ path('app_media_download', {'id': media.id}) }}"
+                                        type="video/{{ media.type }}">
+                                </video>
+                            {% else %}
+                                <img
+                                    src="{{ path('app_media_download', {'id': media.id}) }}"
+                                    alt="{{ media.name }}">
+                            {% endif %}
+
+                            <div class="post-actions post-actions-danger">
+                                {{ include('media/_delete_form.html.twig', { id: media.id }) }}
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <footer class="editor-footer">
+
+                <a class="editor-back"
+                   href="{{ path('app_post_show', {'id': post.id}) }}">
+                    ← Retour au post
+                </a>
+
+                {% if is_granted('ROLE_ADMIN') or (app.user and app.user.id == post.createdBy.id) %}
+                    {{ include('post/_delete_form.html.twig', { post: post }) }}
+                {% endif %}
+
+            </footer>
+
+        </article>
+
+    </section>
+
 {% endblock %}

@@ -66,14 +66,19 @@ final class CommentController extends AbstractController
     }
 
     #[Route('/comment/{id}', name: 'app_comment_show', methods: ['GET'])]
-    public function show(Comment $comment): Response
-    {
+    public function show(
+        Comment $comment,
+        CommentService $commentService
+    ): Response {
         $postId = $comment->getPost()->getId();
+
         return $this->render('comment/show.html.twig', [
             'comment' => $comment,
+            'children' => $commentService->getVisibleChildren($comment),
             'postId' => $postId,
         ]);
     }
+
 
     #[Route('/comment/{id}/edit', name: 'app_comment_edit', methods: ['GET', 'POST'])]
     #[IsGranted(CommentVoter::EDIT_COMMENT, 'comment')]

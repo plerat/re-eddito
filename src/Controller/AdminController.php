@@ -23,13 +23,13 @@ final class AdminController extends AbstractController
     public function userList(UserService $userService): Response
     {
         $users = $userService->retrieveAllUsers();
-        return $this->render('admin/users.html.twig',["users"=>$users]);
+        return $this->render('admin/user/users.html.twig',["users"=>$users]);
     }
     #[Route('/admin/user/{id}/post', name: 'app_admin_user_post')]
     public function adminUserPost(PostService $postService, User $user): Response
     {
-        $post = $postService->retrieveAllPostFromUser($user);
-        return $this->render('admin/userPosts.html.twig',
+        $post = $postService->getAllPostFromUser($user);
+        return $this->render('admin/user/userPosts.html.twig',
             [
                 'user'=>$user,
                 'posts'=>$post,
@@ -38,8 +38,8 @@ final class AdminController extends AbstractController
     #[Route('/admin/user/{id}/comment', name: 'app_admin_user_comment')]
     public function userProfile(CommentService $commentService, User $user): Response
     {
-        $comments = $commentService->retrieveAllCommentFromUser($user);
-        return $this->render('admin/userComments.html.twig',
+        $comments = $commentService->getUserComments($user);
+        return $this->render('admin/user/userComments.html.twig',
             [
                 'user'=>$user,
                 'comments'=>$comments
@@ -55,8 +55,8 @@ final class AdminController extends AbstractController
     #[Route('/admin/comments', name: 'app_admin_comment_list')]
     public function commentList(CommentService $commentService): Response
     {
-        $comment = $commentService->retrieveAllComments();
-        return $this->render('admin/comments.html.twig',["comments"=>$comment]);
+        $comment = $commentService->getAllComments();
+        return $this->render('admin/comment/comments.html.twig',["comments"=>$comment]);
     }
 
 

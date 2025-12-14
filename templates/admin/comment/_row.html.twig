@@ -1,0 +1,36 @@
+<tr>
+    <td>
+        <a href="{{ path('app_admin_user_post', {'id': comment.createdBy.id}) }}">
+            {{ comment.createdBy.pseudo }}
+        </a>
+    </td>
+
+    <td>
+        {{ comment.content }}
+    </td>
+
+    <td>
+        {% if comment.parent %}
+            <a href="{{ path('app_comment_show', {'id': comment.parent.id}) }}">
+                commentaire parent
+            </a>
+        {% else %}
+            <a href="{{ path('app_post_show', {'id': comment.post.id}) }}">
+                post
+            </a>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if app.user and app.user.id == comment.createdBy.id %}
+            <a class="post-link"
+               href="{{ path('app_comment_edit', {'id': comment.id}) }}">
+                Éditer
+            </a>
+        {% endif %}
+    </td>
+
+    <td>
+        {{ include('comment/_delete_form.html.twig') }}
+    </td>
+</tr>

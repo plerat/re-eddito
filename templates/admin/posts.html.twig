@@ -1,15 +1,21 @@
 {% extends 'base.html.twig' %}
+
 {% block body %}
-    ><a href="{{ path('app_admin')}}">Admin</a>><a href="{{ path('app_admin_post_list')}}">post</a>
 
-    <p>Hello {{ app.user.email }}</p>
-    <p>Vous avez le droit d'être parce que vous avez {{ app.user.roles|join('|') }}</p>
+    {% include 'admin/layout/breadcrumb.html.twig' with {
+        items: [
+            { label: 'Posts', path: path('app_admin_post_list') }
+        ]
+    } %}
 
-    {% if posts %}
+    <section class="feed">
+
         {% for post in posts %}
-            {{ include('admin/post/show.html.twig',{ 'post' : post }) }}
+            {{ include('admin/post/_card.html.twig', { post: post }) }}
+        {% else %}
+            <p class="empty-state">Aucun post.</p>
         {% endfor %}
-    {% else %}
-        <p> aucun post</p>
-    {% endif %}
+
+    </section>
+
 {% endblock %}

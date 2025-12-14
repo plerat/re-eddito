@@ -6,8 +6,10 @@ use App\Entity\Media;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class MediaVoter
+class MediaVoter extends Voter implements VoterInterface
 {
     const string DELETE_MEDIA = 'delete_media';
 

@@ -1,17 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Comment{% endblock %}
+{% block title %}Nouveau commentaire{% endblock %}
 
 {% block body %}
-    <h1>Edit Comment</h1>
 
-    {{ include('comment/_form.html.twig', {'button_label': 'Update'}) }}
+    <section class="editor-screen">
+        <article class="editor-card">
 
-    {% if comment.parent %}
-        <a href="{{ path('app_comment_show', {'id': comment.id}) }}">back to list</a>
-    {% else %}
-        <a href="{{ path('app_post_show', {'id': postId}) }}">back to list</a>
-    {% endif %}
+            <h1 class="editor-title">Édition commentaire</h1>
 
-    {{ include('comment/_delete_form.html.twig') }}
+            {{ include('comment/_form.html.twig') }}
+
+            <div class="editor-footer">
+                <a class="editor-back"
+                   href="{{ path('app_post_show', {'id': postId}) }}">
+                    Retour
+                </a>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    {{ include('comment/_delete_form.html.twig') }}
+                {% endif %}
+            </div>
+
+        </article>
+    </section>
+
+
 {% endblock %}

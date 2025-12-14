@@ -29,7 +29,7 @@ class RegistrationControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/register');
 
-        $form = $crawler->selectButton('Register')->form();
+        $form = $crawler->selectButton('Créer mon compte')->form();
         $form['register_user[email]'] = 'testRegister@test.xyz';
         $form['register_user[pseudo]'] = 'testRegister';
         $form['register_user[plainPassword][first]'] = '{7W5YE}?e7S#pq5c';
