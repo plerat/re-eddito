@@ -4,6 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -40,4 +43,12 @@ class PostRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findPostsQuery(): QueryBuilder
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.isDeleted = :isDeleted')
+            ->setParameter('isDeleted', false)
+            ->orderBy('p.createdAt', 'DESC');
+    }
 }
+
