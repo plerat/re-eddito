@@ -36,6 +36,6 @@ class PostControllerTest extends WebTestCase
         $this->assertInstanceOf(Post::class, $post);
         $this->assertEquals('test post content', $post->getContent());
 
-        $this->assertResponseRedirects('/post', 303);
+        $this->assertResponseRedirects('/', 303);
     }
 }

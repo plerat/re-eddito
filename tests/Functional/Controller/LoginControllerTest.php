@@ -16,7 +16,7 @@ class LoginControllerTest extends WebTestCase
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/login');
-        $form = $crawler->selectButton('Login')->form();
+        $form = $crawler->selectButton('Se connecter')->form();
         $form['_username'] = 'user@user.xyz';
         $form['_password'] = 'user';
 
@@ -27,7 +27,7 @@ class LoginControllerTest extends WebTestCase
     public function testLoginWithWrongCredentials(): void {
         $client = static::createClient();
         $crawler = $client->request('GET', '/login');
-        $form = $crawler->selectButton('Login')->form();
+        $form = $crawler->selectButton('Se connecter')->form();
         $form['_username'] = 'wrong@wrong.xyz';
         $form['_password'] = 'wrong';
         $crawler = $client->submit($form);
