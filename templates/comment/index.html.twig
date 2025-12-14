@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Comment index{% endblock %}
+
+{% block body %}
+    <h1>Liste des commentaires du post</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Content</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% if comments is not empty  %}
+            {% for comment in comments %}
+                {% if not comment.parent %}
+                <tr>
+                    <td>{{ comment.content }}</td>
+                    <td>
+                        <a href="{{ path('app_comment_show', {'id': comment.id}) }}">Show</a>
+                        <a href="{{ path('app_comment_edit', {'id': comment.id}) }}">Edit</a>
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    {% if post is defined and post.comments is not empty  %}
+        <a href="{{ path('app_comment_new', {'id': post.id}) }}">Create new</a>
+    {% endif %}
+{% endblock %}

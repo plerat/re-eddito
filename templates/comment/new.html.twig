@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Comment{% endblock %}
+
+{% block body %}
+    <section class="feed">
+        <article class="post-card post-editor">
+            <h1 class="post-title">Create new comment</h1>
+
+            {{ include('comment/_form.html.twig') }}
+
+
+        </article>
+    </section>
+
+{% endblock %}

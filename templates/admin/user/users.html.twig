@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <section class="feed">
+
+        {% include 'admin/layout/breadcrumb.html.twig' with {
+            items: [
+                { label: 'Utilisateurs', path: path('app_admin_user_list') }
+            ]
+        } %}
+
+        <table class="admin-table">
+
+            <thead>
+            <tr>
+                <th>Utilisateur</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td class="admin-user">
+                        <a href="{{ path('app_admin_user_post', {'id': user.id}) }}">
+                            {{ user.pseudo }}
+                        </a>
+                    </td>
+                    <td class="admin-actions">
+                        <a href="{{ path('app_admin_user_post', {'id': user.id}) }}">
+                            Posts
+                        </a>
+                        <a href="{{ path('app_admin_user_comment', {'id': user.id}) }}">
+                            Commentaires
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+    </section>
+
+{% endblock %}

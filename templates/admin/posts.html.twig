@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% include 'admin/layout/breadcrumb.html.twig' with {
+        items: [
+            { label: 'Posts', path: path('app_admin_post_list') }
+        ]
+    } %}
+
+    <section class="feed">
+
+        {% for post in posts %}
+            {{ include('admin/post/_card.html.twig', { post: post }) }}
+        {% else %}
+            <p class="empty-state">Aucun post.</p>
+        {% endfor %}
+
+    </section>
+
+{% endblock %}

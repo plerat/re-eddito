@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Reply{% endblock %}
+
+{% block body %}
+    <h1>Create new Reply</h1>
+
+    {{ include('comment/_form.html.twig') }}
+
+    <a href="{{ path('app_comment_show', {'id': parentId}) }}">back to list</a>
+{% endblock %}

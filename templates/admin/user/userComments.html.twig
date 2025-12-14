@@ -1,0 +1,27 @@
+{% extends '/base.html.twig' %}
+
+{% block body %}
+    {% include 'admin/layout/breadcrumb.html.twig' with {
+        items: [
+            { label: 'Utilisateurs', path: path('app_admin_user_list') },
+            { label: user.pseudo, path: path('app_admin_user_post', {'id': user.id}) },
+            { label: 'Commentaires', path: path('app_admin_user_comment', {'id': user.id}) }
+        ]
+    } %}
+
+    <h2>Commentaires de {{ user.pseudo }}</h2>
+
+    {{ include('admin/user/_actions.html.twig', { user: user }) }}
+
+    {% if comments|length > 0 %}
+        <table>
+            <tbody>
+            {% for comment in comments %}
+                {{ include('admin/comment/_row.html.twig', { comment: comment }) }}
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucun commentaire.</p>
+    {% endif %}
+{% endblock %}

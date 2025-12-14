@@ -22,3 +22,11 @@
 ### <.idea> ###
 .idea/
 ### <.idea> ###
+
+### <uploads> ###
+/uploads/*
+### <uploads> ###
+
+### DS_Store ###
+.DS_Store
+### DS_Store ###

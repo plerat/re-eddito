@@ -1,3 +1,934 @@
-body {
-    background-color: skyblue;
+/* =====================================================
+   RE-EDITTO – DESIGN SYSTEM (Reddit-like)
+   ===================================================== */
+:root {
+    /* Couleurs */
+    --bg: #031321;
+    --surface: #1a1a1b;
+    --surface-2: #272729;
+    --border: #343536;
+
+    --text: #99c6f7;
+    --muted: #818080;
+    --soft: #9b9b9b;
+
+    --danger: #ff5a5f;
+
+    /* Couleur principale Reddit */
+    --primary: #E79828;
+    --primary-hover: #e03d00;
+
+    /* Layout */
+    --max-width: 720px;
+    --padding: 16px;
+    --gap: 12px;
+    --radius: 12px;
+
+    /* Typo */
+    --font: system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial;
+    --fs-base: 15px;
+    --lh: 1.45;
+
+    /* UI */
+    --shadow: 0 4px 12px rgba(0,0,0,.4);
+    --focus: 0 0 0 3px rgba(255,69,0,.35);
 }
+
+/* =====================================================
+   RESET & BASE
+   ===================================================== */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font);
+    font-size: var(--fs-base);
+    line-height: var(--lh);
+    background: var(--bg);
+    color: var(--text);
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* =====================================================
+   APP LAYOUT
+   ===================================================== */
+.app {
+    min-height: 100vh;
+    background: var(--bg);
+}
+
+.app-feed {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--padding);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+
+/* =====================================================
+   HEADER / NAV
+   ===================================================== */
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+}
+
+
+.app-nav {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 12px var(--padding);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+.nav-logo {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--primary);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-link {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text);
+}
+
+.nav-link:hover {
+    background: var(--surface-2);
+    text-decoration: none;
+}
+
+.nav-link-primary {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+}
+
+.nav-link-primary:hover {
+    background: var(--primary-hover);
+}
+
+.nav-link.logout {
+    color: var(--muted);
+}
+
+/* =====================================================
+   FEED
+   ===================================================== */
+.feed {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+.feed-title {
+    font-size: 1rem;
+    margin: 8px 0;
+}
+/* =====================================================
+   POST CARD (lecture)
+   ===================================================== */
+.post-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    box-shadow: var(--shadow);
+}
+
+.post-header {
+    margin-bottom: 8px;
+}
+
+.post-title {
+    margin: 0 0 6px;
+    font-size: 0.95rem;
+}
+
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.post-body {
+    margin: 10px 0;
+}
+
+.post-content {
+    margin: 0 0 10px;
+    color: var(--text);
+}
+
+.post-footer {
+    margin-top: 10px;
+}
+
+.post-link {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* =====================================================
+   POST MEDIA
+   ===================================================== */
+.post-media {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.post-media img,
+.post-media video {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+/* =====================================================
+   POST – DELETE BUTTON
+   ===================================================== */
+.post-link-danger {
+    background: transparent;
+    border: 1px solid rgba(231, 152, 40, 0.35);
+    color: var(--primary);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.post-link-danger:hover {
+    background: rgba(231, 152, 40, 0.12);
+    border-color: var(--primary);
+}
+
+.post-link-danger:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(231, 152, 40, 0.35);
+}
+
+/* =====================================================
+   POST EDITOR (create / edit)
+   ===================================================== */
+
+.post-editor {
+    background: var(--surface);
+    padding: 16px;
+}
+
+/* Titre */
+.post-editor .post-title {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+/* Form */
+.post-editor form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Champs */
+.post-editor input[type="text"],
+.post-editor textarea {
+    background: #000;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.post-editor textarea {
+    min-height: 160px;
+    line-height: 1.5;
+}
+
+/* Focus */
+.post-editor input:focus,
+.post-editor textarea:focus {
+    border-color: var(--primary);
+    box-shadow: var(--focus);
+    outline: none;
+}
+
+/* Bouton principal */
+.post-editor .btn-primary {
+    align-self: flex-start;
+    width: auto;
+    padding: 8px 18px;
+}
+
+/* Actions secondaires */
+.post-editor .post-actions {
+    margin-top: 12px;
+}
+
+
+
+/* =====================================================
+   FILE INPUT (post editor)
+   ===================================================== */
+
+.post-editor input[type="file"] {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.post-editor input[type="file"]::-webkit-file-upload-button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.post-editor input[type="file"]::-webkit-file-upload-button:hover {
+    border-color: var(--primary);
+    background: rgba(231, 152, 40, 0.12);
+}
+
+/* =====================================================
+   ADMIN – TABLE COMMENTS
+   ===================================================== */
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px; /* espace vertical entre les lignes */
+}
+
+table tr {
+    background: var(--surface);
+}
+
+table td {
+    padding: 10px 12px;
+    vertical-align: top;
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+table tr td:first-child {
+    border-left: 1px solid var(--border);
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+table tr td:last-child {
+    border-right: 1px solid var(--border);
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+/* =====================================================
+   DANGER ZONE (DELETE)
+   ===================================================== */
+
+.danger-zone {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+}
+
+
+.danger-zone form {
+    display: flex;
+    margin: 0;
+    justify-content: flex-end;
+}
+
+.form-actions-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+.form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+/* lien retour */
+.form-back {
+    font-size: 0.8rem;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.form-back:hover {
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+   EDITOR (CREATE / EDIT)
+   ===================================================== */
+
+.editor-screen {
+    min-height: calc(100vh - 60px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editor-card {
+    width: 100%;
+    max-width: 560px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.editor-title {
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* Footer (Retour / Delete) */
+.editor-footer {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Retour */
+.editor-back {
+    font-size: 0.8rem;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.editor-back:hover {
+    text-decoration: underline;
+}
+
+/* Delete (aligné à droite) */
+.editor-footer form {
+    margin: 0;
+}
+
+/* =====================================================
+   POST ACTIONS – DELETE À DROITE
+   ===================================================== */
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+/* Groupe gauche */
+.post-actions-left {
+    display: flex;
+    gap: 18px; /* espace entre Voir / Éditer */
+}
+
+/* Groupe droite */
+.post-actions-right {
+    display: flex;
+    align-items: center;
+}
+
+
+
+
+/* =====================================================
+   ADMIN – TABLE (clean & dense)
+   ===================================================== */
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.admin-table thead th {
+    text-align: left;
+    padding: 10px 12px;
+    color: var(--muted);
+    font-weight: 500;
+    border-bottom: 1px solid var(--border);
+}
+
+.admin-table tbody tr {
+    border-bottom: 1px solid var(--border);
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(255,255,255,0.04);
+}
+
+.admin-table td {
+    padding: 10px 12px;
+    vertical-align: middle;
+}
+
+/* User cell */
+.admin-user {
+    font-weight: 500;
+    color: var(--text);
+}
+
+/* Actions */
+.admin-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.admin-actions a {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.admin-actions a:hover {
+    border-color: var(--primary);
+    background: rgba(231, 152, 40, 0.12);
+}
+
+
+/* =========================
+   ACTIONS
+   ========================= */
+
+.auth-card button[type="submit"] {
+    margin-top: 8px;
+    width: 100%;
+    padding: 11px;
+    border-radius: 999px;
+    border: none;
+    background: var(--primary);
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.auth-card button[type="submit"]:hover {
+    background: var(--primary-hover);
+}
+
+/* Lien retour */
+.auth-links a {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 0.8rem;
+}
+
+
+
+/* =====================================================
+   PROFILE
+   ===================================================== */
+.profile-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+}
+
+.profile-username {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.profile-info {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.profile-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+}
+
+.profile-value {
+    font-size: 0.9rem;
+}
+
+.profile-edit {
+    margin-top: 10px;
+}
+
+.profile-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-edit-row input {
+    max-width: 180px;
+    height: 36px;
+    font-size: 0.85rem;
+}
+.profile-inline-fields {
+    gap: 14px;
+}
+
+.btn-primary.btn-compact {
+    width: auto;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    border-radius: 999px;
+    align-self: center;
+
+}
+.profile-edit-row .btn-primary.btn-compact {
+    min-width: unset;
+    font-weight: 500;
+}
+
+
+
+/* =====================================================
+   PROFILE – INLINE FORM
+   ===================================================== */
+
+.profile-inline-form {
+    margin-top: 10px;
+}
+
+.profile-inline-fields {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.profile-inline-fields input {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-inline-fields .btn-primary {
+    width: auto;
+    padding: 10px 18px;
+    white-space: nowrap;
+}
+
+/* =====================================================
+   PROFILE TABS
+   ===================================================== */
+
+.profile-tabs {
+    display: flex;
+    gap: 12px;
+    margin: 12px 0 16px;
+}
+
+.profile-tab {
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+}
+
+.profile-tab:hover {
+    border-color: var(--primary);
+    background: rgba(231, 152, 40, 0.12);
+}
+
+
+/* =====================================================
+   FORMS
+   ===================================================== */
+.profile-form {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+}
+
+.form-title {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+    display: block;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #000;
+    color: var(--text);
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    box-shadow: var(--focus);
+    border-color: var(--primary);
+}
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+.btn-primary {
+    width: 100%;
+    padding: 10px;
+    border-radius: 999px;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+/* =====================================================
+   UTILITIES
+   ===================================================== */
+.back-link {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.form-error {
+    color: var(--danger);
+    font-size: 0.8rem;
+}
+
+.empty-state {
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+
+/* =====================================================
+   LOGIN / AUTH
+   ===================================================== */
+
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 12px;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.form-checkbox input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.form-checkbox label {
+    margin: 0;
+    cursor: pointer;
+}
+
+.auth-links {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.8rem;
+}
+
+.auth-links a {
+    color: var(--primary);
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+/* =====================================================
+   AUTH SCREENS (LOGIN / REGISTER / RESET)
+   ===================================================== */
+
+.auth-screen {
+    min-height: calc(100vh - 60px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: linear-gradient(
+        180deg,
+        rgba(255,255,255,0.04),
+        rgba(255,255,255,0.02)
+    );
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+}
+
+.auth-title {
+    margin: 0 0 14px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+/* =====================================================
+   AUTH – REGISTER TWEAKS
+   ===================================================== */
+
+.auth-card .form-group + .form-group {
+    margin-top: 12px;
+}
+
+
+/* =====================================================
+   ADMIN DASHBOARD
+   ===================================================== */
+
+.admin-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+}
+
+/* Titre admin */
+.admin-title {
+    margin: 0 0 12px;
+    font-size: 1.1rem;
+    color: var(--text);
+}
+
+/* Menu */
+.admin-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-link {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #000;
+    color: var(--text);
+    font-size: 0.9rem;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.admin-link:hover {
+    text-decoration: none;
+    border-color: var(--primary);
+    background: rgba(231, 152, 40, 0.08);
+}
+
+
+
+
+/* =====================================================
+   DESKTOP
+   ===================================================== */
+@media (min-width: 1200px) {
+    :root {
+        --max-width: 860px;
+    }
+}
+
+
+@media (min-width: 900px) {
+    :root {
+        --padding: 18px;
+    }
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+@media (max-width: 480px) {
+    :root {
+        --padding: 12px;
+        --max-width: 100%;
+    }
+
+    .nav-links {
+        gap: 4px;
+    }
+
+    .nav-link {
+        padding: 6px 8px;
+        font-size: 0.8rem;
+    }
+}
+

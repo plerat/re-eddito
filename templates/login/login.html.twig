@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+
+    <section class="auth-screen">
+
+        <article class="auth-card">
+
+            <h1 class="auth-title">Connexion</h1>
+
+            {# Flash messages #}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <p class="form-error">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+            {% endfor %}
+
+            {# Erreur de login #}
+            {% if error %}
+                <p class="form-error">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </p>
+
+                {% if sendVerificationEmail and userId is defined %}
+                    <p class="auth-hint">
+                        Vous pouvez renvoyer un email de confirmation :
+                        <a href="{{ path('app_send_verification_email', { id: userId }) }}">
+                            cliquer ici
+                        </a>
+                    </p>
+                {% endif %}
+            {% endif %}
+
+            {{ form_start(form, { attr: { id: 'form-login' } }) }}
+
+            <div class="form-group">
+                {{ form_row(form._username) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_row(form._password) }}
+            </div>
+
+            <div class="form-checkbox">
+                {{ form_row(form._remember_me) }}
+            </div>
+
+            <button type="submit" class="btn-primary">
+                Se connecter
+            </button>
+
+            {{ form_end(form) }}
+
+            <div class="auth-links">
+                <a href="{{ path('app_request-forgot-password') }}">
+                    Mot de passe oublié ?
+                </a>
+
+                <a href="{{ path('app_register') }}">
+                    Créer un compte
+                </a>
+            </div>
+
+        </article>
+
+    </section>
+
+{% endblock %}

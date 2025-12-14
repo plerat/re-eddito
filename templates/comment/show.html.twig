@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commentaire{% endblock %}
+
+{% block body %}
+    <section class="feed">
+
+        <a class="back-link"
+           href="{{ comment.parent
+           ? path('app_comment_show', {'id': comment.parent.id})
+           : path('app_post_show', {'id': postId}) }}">
+            ← Retour
+        </a>
+
+        <article class="post-card post-comment">
+
+            <div class="post-meta">
+                <a href="{{ path('app_user_profile', {'id': comment.createdBy.id}) }}">
+                    {{ comment.createdBy.pseudo }}
+                </a>
+                <span>{{ comment.createdAt|date('d/m/Y H:i') }}</span>
+            </div>
+
+            <p class="post-content">{{ comment.content }}</p>
+
+            <div class="post-actions">
+                <a class="post-link" href="{{ path('app_comment_reply', {'id': comment.id}) }}">
+                    Répondre
+                </a>
+
+                {% if app.user and app.user.id == comment.createdBy.id %}
+                    <a class="post-link" href="{{ path('app_comment_edit', {'id': comment.id}) }}">
+                        Éditer
+                    </a>
+                {% endif %}
+            </div>
+
+        </article>
+
+        <h2 class="feed-title">Réponses</h2>
+
+        {% for child in children %}
+            <article class="post-card post-comment post-comment-child">
+
+                <div class="post-meta">
+                    <a href="{{ path('app_user_profile', {'id': child.createdBy.id}) }}">
+                        {{ child.createdBy.pseudo }}
+                    </a>
+                    <span>{{ child.createdAt|date('d/m/Y H:i') }}</span>
+                </div>
+
+                <p class="post-content">{{ child.content }}</p>
+
+                <div class="post-actions">
+                    <a class="post-link" href="{{ path('app_comment_show', {'id': child.id}) }}">
+                        Voir
+                    </a>
+                    <a class="post-link" href="{{ path('app_comment_reply', {'id': child.id}) }}">
+                        Répondre
+                    </a>
+                </div>
+
+            </article>
+        {% else %}
+            <p class="empty-state">Aucune réponse.</p>
+        {% endfor %}
+
+    </section>
+
+{% endblock %}

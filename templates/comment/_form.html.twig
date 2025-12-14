@@ -1,0 +1,14 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+
+<div class="form-footer">
+    <a class="form-back"
+       href="{{ path('app_post_show', {'id': postId}) }}">
+        Retour
+    </a>
+
+    <button type="submit" class="btn-primary">
+        {{ button_label|default('Valider') }}
+    </button>
+</div>
+{{ form_end(form) }}

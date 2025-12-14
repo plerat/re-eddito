@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration{% endblock %}
+
+{% block body %}
+
+    <section class="feed">
+
+        {% include 'admin/layout/breadcrumb.html.twig' with {
+            items: []
+        } %}
+
+        <article class="admin-card">
+
+            <h1 class="admin-title">Administration</h1>
+
+            <ul class="admin-menu">
+                <li>
+                    <a class="admin-link" href="{{ path('app_admin_user_list') }}">
+                        Gérer les utilisateurs
+                    </a>
+                </li>
+                <li>
+                    <a class="admin-link" href="{{ path('app_admin_post_list') }}">
+                        Gérer les posts
+                    </a>
+                </li>
+                <li>
+                    <a class="admin-link" href="{{ path('app_admin_comment_list') }}">
+                        Gérer les commentaires
+                    </a>
+                </li>
+            </ul>
+
+        </article>
+
+    </section>
+
+{% endblock %}

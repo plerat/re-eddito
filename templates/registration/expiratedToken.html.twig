@@ -1,0 +1,3 @@
+{% block body %}
+    Votre token a expiré, renvoyer un mail <a href="{{ path('app_send_verification_email',{'id':user.id}) }}">ici</a>
+{% endblock body %}

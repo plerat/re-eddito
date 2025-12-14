@@ -1,0 +1,8 @@
+<nav>
+    <a href="{{ path('app_admin') }}">Admin</a>
+    {% for item in items %}
+        &gt;
+        <a href="{{ item.path }}">{{ item.label }}</a>
+    {% endfor %}
+</nav>
+
